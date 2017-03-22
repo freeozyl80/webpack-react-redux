@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { TEST, ONLY } from './action'
+import { TEST, ONLY, SHOW, HIDE } from './action'
 
 function deliverTest (state = 'testjs', action) {
 	if (action.fn && typeof action.fn == 'function'){
@@ -14,15 +14,25 @@ function deliverTest (state = 'testjs', action) {
 }
 
 function showOnly (state = '', action) {
-	console.log(action);
+	console.log(action,'2次');
 	switch (action.type) {
 	    case ONLY:
 	      	return state + action.text
 	    default:
-	    	return state;
+	    	return '';
 	}
 }
 
-const rootReducer = combineReducers({ deliverTest, showOnly})
+function runText (state = '', action) {
+	console.log(action.type,'测试');
+	switch (action.type) {
+		case SHOW:
+			return action.text
+		default:
+			return '12312321'
+	}
+}
+
+const rootReducer = combineReducers({ deliverTest, showOnly, runText})
 
 export default rootReducer

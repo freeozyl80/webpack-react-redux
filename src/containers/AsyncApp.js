@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { test, only } from '../store/action'
+import { test, only, run } from '../store/action'
 
 class AsyncApp extends Component {
 	constructor(props) {
@@ -8,28 +8,43 @@ class AsyncApp extends Component {
 	}
 	componentDidMount() {
 		const {
-			dispatch,
-			fn
+			dispatch
 		} = this.props;
-		dispatch(test(fn))
+		dispatch(run('这个很关键'))
 	}
 	handleClick(e) {
 		const {
+			dispatch,
+			fn
+		} = this.props;
+	    e.preventDefault();
+		setTimeout(function(){
+	    	dispatch(only("123"));
+		}, 1000);
+    	dispatch(only("test"));
+  	}
+  	handleChange(e) {
+  		console.log(e,'这个应该不是个函数了');
+  		const {
 			dispatch
 		} = this.props;
-	    e.preventDefault()
-	    dispatch(only("123"))
+		dispatch(test(e));
   	}
 	render () {
-		const { dispatch, test, showOnly, zyl } = this.props
+		const { dispatch, deliverTest, showOnly, zyl, runText } = this.props
 		return (
 			<div>
-				<div>{test}</div>
+				<div>{deliverTest}</div>
+				<div>00000{runText}00000</div>
 				<button onClick={(e) => this.handleClick(e)}>
 	          		Add
 	        	</button>
-	        	<div>{showOnly}</div>
-	        	<div>{zyl == 'zhangyunlu' ? 1 : 2}</div>
+	        	<select onChange={e => this.handleChange(e.target.value)}>
+                	<option value="111">111</option>
+                	<option value="222">222</option>
+                </select>
+	        	<div>88888{showOnly}88888</div>
+	        	<div>{zyl}</div>
         	</div>
 		)
 	}
@@ -38,16 +53,18 @@ class AsyncApp extends Component {
 function mapStateToProps(state) {
 	const {
 		deliverTest,
-		showOnly
+		showOnly,
+		runText
 	} = state;
-	console.log(state);
-	const zyl = "zhangyunlu"
+	console.log(state,'这里可以检测变化么');
+	let zyl = "zhangyunlu"
 	return {
 		deliverTest,
 		showOnly,
+		runText,
 		zyl,
 		fn: function() {
-			console.log(123);
+			zyl = "Zhang";
 		}
 	}
 }
